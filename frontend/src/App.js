@@ -6,6 +6,8 @@ import Suggestions from './components/Suggestions';
 import { expenseService } from './services/expenseService';
 import './App.css';
 
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+
 function App() {
   const [expenses, setExpenses] = useState([]);
   const [stats, setStats] = useState({});
