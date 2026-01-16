@@ -1,6 +1,11 @@
 const mongoose = require('mongoose');
 
 const expenseSchema = new mongoose.Schema({
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  },
   description: {
     type: String,
     required: true,
@@ -48,5 +53,6 @@ const expenseSchema = new mongoose.Schema({
 // Index for faster queries
 expenseSchema.index({ date: -1 });
 expenseSchema.index({ category: 1 });
+expenseSchema.index({ user: 1 }); // Add index for user queries
 
 module.exports = mongoose.model('Expense', expenseSchema);

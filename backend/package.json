@@ -1,20 +1,41 @@
 {
-  "name": "expense-tracker-backend",
+  "name": "expency-backend",
   "version": "1.0.0",
-  "description": "Backend for Indian College Student Expense Tracker",
+  "description": "Backend for Expency - Personal Expense Tracker",
   "main": "src/server.js",
   "scripts": {
-    "start": "node src/server.js",
-    "dev": "nodemon src/server.js"
+    "start": "cross-env NODE_ENV=production node src/server.js",
+    "dev": "cross-env NODE_ENV=development nodemon src/server.js",
+    "prod": "cross-env NODE_ENV=production node src/server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "keywords": [
+    "expense-tracker",
+    "budget",
+    "finance",
+    "api",
+    "rest-api"
+  ],
+  "author": "",
+  "license": "MIT",
   "dependencies": {
-    "express": "^5.2.1",
-    "mongoose": "^8.0.0",
+    "bcryptjs": "^3.0.3",
+    "compression": "^1.8.1",
+    "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
+    "express": "^5.2.1",
+    "express-rate-limit": "^8.2.1",
+    "express-validator": "^7.3.1",
+    "helmet": "^8.1.0",
+    "hpp": "^0.2.3",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^8.0.0",
+    "morgan": "^1.10.1",
     "pdfkit": "^0.14.0"
   },
   "devDependencies": {
+    "cross-env": "^10.1.0",
     "nodemon": "^3.0.1"
   }
 }

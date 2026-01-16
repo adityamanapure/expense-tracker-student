@@ -1,6 +1,26 @@
 import axios from 'axios';
 
-const API_URL = '/api/expenses';
+const API_URL = 'http://localhost:5000/api/expenses';
+
+// Get auth token from localStorage
+const getAuthHeader = () => {
+  const userStr = localStorage.getItem('user');
+  if (!userStr) {
+    console.error('No user found in localStorage');
+    return {};
+  }
+  
+  const user = JSON.parse(userStr);
+  console.log('User from localStorage:', user);
+  
+  if (!user?.token) {
+    console.error('No token found in user object');
+    return {};
+  }
+  
+  console.log('Sending auth header with token');
+  return { Authorization: `Bearer ${user.token}` };
+};
 
 export const expenseService = {
   // Get all expenses
@@ -10,8 +30,10 @@ export const expenseService = {
     if (year) params.append('year', year);
     if (category) params.append('category', category);
     
-    const response = await axios.get(`${API_URL}?${params.toString()}`);
-    return response.data;
+    const response = await axios.get(`${API_URL}?${params.toString()}`, {
+      headers: getAuthHeader()
+    });
+    return response.data.data || response.data;
   },
 
   // Get statistics
@@ -20,8 +42,10 @@ export const expenseService = {
     if (month) params.append('month', month);
     if (year) params.append('year', year);
     
-    const response = await axios.get(`${API_URL}/stats?${params.toString()}`);
-    return response.data;
+    const response = await axios.get(`${API_URL}/stats?${params.toString()}`, {
+      headers: getAuthHeader()
+    });
+    return response.data.data || response.data;
   },
 
   // Get suggestions
@@ -30,8 +54,10 @@ export const expenseService = {
     params.append('month', month);
     params.append('year', year);
     
-    const response = await axios.get(`${API_URL}/suggestions?${params.toString()}`);
-    return response.data;
+    const response = await axios.get(`${API_URL}/suggestions?${params.toString()}`, {
+      headers: getAuthHeader()
+    });
+    return response.data.data || response.data;
   },
 
   // Download PDF report
@@ -41,7 +67,8 @@ export const expenseService = {
     params.append('year', year);
     
     const response = await axios.get(`${API_URL}/report/pdf?${params.toString()}`, {
-      responseType: 'blob'
+      responseType: 'blob',
+      headers: getAuthHeader()
     });
     
     const url = window.URL.createObjectURL(new Blob([response.data]));
@@ -55,19 +82,25 @@ export const expenseService = {
 
   // Create expense
   createExpense: async (expenseData) => {
-    const response = await axios.post(API_URL, expenseData);
-    return response.data;
+    const response = await axios.post(API_URL, expenseData, {
+      headers: getAuthHeader()
+    });
+    return response.data.data || response.data;
   },
 
   // Update expense
   updateExpense: async (id, expenseData) => {
-    const response = await axios.put(`${API_URL}/${id}`, expenseData);
-    return response.data;
+    const response = await axios.put(`${API_URL}/${id}`, expenseData, {
+      headers: getAuthHeader()
+    });
+    return response.data.data || response.data;
   },
 
   // Delete expense
   deleteExpense: async (id) => {
-    const response = await axios.delete(`${API_URL}/${id}`);
-    return response.data;
+    const response = await axios.delete(`${API_URL}/${id}`, {
+      headers: getAuthHeader()
+    });
+    return response.data.data || response.data;
   }
 };

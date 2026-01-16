@@ -1,12 +1,13 @@
 const Expense = require('../models/Expense');
+const mongoose = require('mongoose');
 
 class SuggestionService {
-  async getSuggestions(month, year) {
+  async getSuggestions(month, year, userId) {
     const startDate = new Date(year, month - 1, 1);
     const endDate = new Date(year, month, 0, 23, 59, 59);
 
     const stats = await Expense.aggregate([
-      { $match: { date: { $gte: startDate, $lte: endDate } } },
+      { $match: { date: { $gte: startDate, $lte: endDate }, user: new mongoose.Types.ObjectId(userId) } },
       {
         $group: {
           _id: '$category',

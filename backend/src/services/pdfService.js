@@ -1,17 +1,19 @@
 const PDFDocument = require('pdfkit');
 const Expense = require('../models/Expense');
+const mongoose = require('mongoose');
 
 class PDFService {
-  async generateMonthlyReport(month, year, res) {
+  async generateMonthlyReport(month, year, userId, res) {
     const startDate = new Date(year, month - 1, 1);
     const endDate = new Date(year, month, 0, 23, 59, 59);
 
     const expenses = await Expense.find({
-      date: { $gte: startDate, $lte: endDate }
+      date: { $gte: startDate, $lte: endDate },
+      user: userId
     }).sort({ date: -1 });
 
     const stats = await Expense.aggregate([
-      { $match: { date: { $gte: startDate, $lte: endDate } } },
+      { $match: { date: { $gte: startDate, $lte: endDate }, user: new mongoose.Types.ObjectId(userId) } },
       {
         $group: {
           _id: '$category',

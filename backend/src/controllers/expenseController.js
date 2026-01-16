@@ -1,86 +1,81 @@
 const expenseService = require('../services/expenseService');
 const suggestionService = require('../services/suggestionService');
 const pdfService = require('../services/pdfService');
+const ApiResponse = require('../utils/ApiResponse');
+const ApiError = require('../utils/ApiError');
+const asyncHandler = require('../utils/asyncHandler');
 
 class ExpenseController {
   // Get all expenses
-  async getAllExpenses(req, res) {
-    try {
-      const { month, year, category } = req.query;
-      const expenses = await expenseService.getExpenses({ month, year, category });
-      res.json(expenses);
-    } catch (error) {
-      res.status(500).json({ message: error.message });
-    }
-  }
+  getAllExpenses = asyncHandler(async (req, res) => {
+    const { month, year, category } = req.query;
+    const expenses = await expenseService.getExpenses({ month, year, category, userId: req.user.id });
+    
+    res.status(200).json(
+      new ApiResponse(200, expenses, 'Expenses retrieved successfully')
+    );
+  });
 
   // Get expense statistics
-  async getStatistics(req, res) {
-    try {
-      const { month, year } = req.query;
-      const stats = await expenseService.getStatistics(month, year);
-      res.json(stats);
-    } catch (error) {
-      res.status(500).json({ message: error.message });
-    }
-  }
+  getStatistics = asyncHandler(async (req, res) => {
+    const { month, year } = req.query;
+    const stats = await expenseService.getStatistics(month, year, req.user.id);
+    
+    res.status(200).json(
+      new ApiResponse(200, stats, 'Statistics retrieved successfully')
+    );
+  });
 
   // Get spending suggestions
-  async getSuggestions(req, res) {
-    try {
-      const { month, year } = req.query;
-      const suggestions = await suggestionService.getSuggestions(month, year);
-      res.json(suggestions);
-    } catch (error) {
-      res.status(500).json({ message: error.message });
-    }
-  }
+  getSuggestions = asyncHandler(async (req, res) => {
+    const { month, year } = req.query;
+    const suggestions = await suggestionService.getSuggestions(month, year, req.user.id);
+    
+    res.status(200).json(
+      new ApiResponse(200, suggestions, 'Suggestions retrieved successfully')
+    );
+  });
 
   // Generate PDF report
-  async generatePDFReport(req, res) {
-    try {
-      const { month, year } = req.query;
-      await pdfService.generateMonthlyReport(month, year, res);
-    } catch (error) {
-      res.status(500).json({ message: error.message });
-    }
-  }
+  generatePDFReport = asyncHandler(async (req, res) => {
+    const { month, year } = req.query;
+    await pdfService.generateMonthlyReport(month, year, req.user.id, res);
+  });
 
   // Create new expense
-  async createExpense(req, res) {
-    try {
-      const newExpense = await expenseService.createExpense(req.body);
-      res.status(201).json(newExpense);
-    } catch (error) {
-      res.status(400).json({ message: error.message });
-    }
-  }
+  createExpense = asyncHandler(async (req, res) => {
+    const newExpense = await expenseService.createExpense({ ...req.body, user: req.user.id });
+    
+    res.status(201).json(
+      new ApiResponse(201, newExpense, 'Expense created successfully')
+    );
+  });
 
   // Update expense
-  async updateExpense(req, res) {
-    try {
-      const updatedExpense = await expenseService.updateExpense(req.params.id, req.body);
-      res.json(updatedExpense);
-    } catch (error) {
-      if (error.message === 'Expense not found') {
-        return res.status(404).json({ message: error.message });
-      }
-      res.status(400).json({ message: error.message });
+  updateExpense = asyncHandler(async (req, res) => {
+    const updatedExpense = await expenseService.updateExpense(req.params.id, req.body, req.user.id);
+    
+    if (!updatedExpense) {
+      throw new ApiError(404, 'Expense not found');
     }
-  }
+    
+    res.status(200).json(
+      new ApiResponse(200, updatedExpense, 'Expense updated successfully')
+    );
+  });
 
   // Delete expense
-  async deleteExpense(req, res) {
-    try {
-      const result = await expenseService.deleteExpense(req.params.id);
-      res.json(result);
-    } catch (error) {
-      if (error.message === 'Expense not found') {
-        return res.status(404).json({ message: error.message });
-      }
-      res.status(500).json({ message: error.message });
+  deleteExpense = asyncHandler(async (req, res) => {
+    const result = await expenseService.deleteExpense(req.params.id, req.user.id);
+    
+    if (!result) {
+      throw new ApiError(404, 'Expense not found');
     }
-  }
+    
+    res.status(200).json(
+      new ApiResponse(200, result, 'Expense deleted successfully')
+    );
+  });
 }
 
 module.exports = new ExpenseController();

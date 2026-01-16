@@ -1,100 +1,104 @@
-# Expense Tracker Backend
+# Expency Backend - Production-Ready API
 
-Professional backend structure for the Student Expense Tracker application.
+A robust, secure, and scalable backend API for the Expency expense tracking application.
 
-## Project Structure
+## 🏗️ Architecture
 
 ```
 backend/
 ├── src/
-│   ├── config/          # Database configuration
-│   │   └── database.js
-│   ├── controllers/     # Request/response handlers
-│   │   └── expenseController.js
+│   ├── config/          # Configuration files
+│   │   ├── env.js       # Environment variables & validation
+│   │   └── database.js  # Database connection
+│   ├── constants/       # Application constants
+│   ├── controllers/     # Route controllers
 │   ├── middleware/      # Custom middleware
-│   │   ├── errorHandler.js
-│   │   └── requestLogger.js
-│   ├── models/          # Database schemas
-│   │   └── Expense.js
-│   ├── routes/          # API route definitions
-│   │   └── expenseRoutes.js
-│   ├── services/        # Business logic layer
-│   │   ├── expenseService.js
-│   │   ├── suggestionService.js
-│   │   └── pdfService.js
-│   ├── utils/           # Helper functions
-│   │   └── logger.js
-│   ├── app.js           # Express app configuration
-│   └── server.js        # Server entry point
-├── .env                 # Environment variables
-├── package.json
-└── README.md
+│   ├── models/          # Mongoose models
+│   ├── routes/          # API routes
+│   ├── services/        # Business logic
+│   ├── utils/           # Utility functions
+│   ├── validators/      # Request validators
+│   ├── app.js          # Express app setup
+│   └── server.js       # Server entry point
 ```
 
-## Architecture
+## 🚀 Production Features
 
-### Separation of Concerns
+### Security
+✅ Helmet.js security headers  
+✅ Rate limiting (100 req/15min, 5 auth req/15min)  
+✅ NoSQL injection protection  
+✅ XSS protection  
+✅ HPP protection  
+✅ JWT authentication  
+✅ Bcrypt password hashing  
 
-- **Controllers**: Handle HTTP requests and responses
-- **Services**: Contain business logic and complex operations
-- **Models**: Define database schemas and data structure
-- **Routes**: Define API endpoints
-- **Middleware**: Process requests before they reach controllers
-- **Config**: Centralized configuration management
-- **Utils**: Reusable helper functions
+### Validation
+✅ Express Validator  
+✅ Schema validation  
+✅ Input sanitization  
 
-## API Endpoints
+### Performance
+✅ Gzip compression  
+✅ MongoDB connection pooling  
+✅ Centralized error handling  
+✅ Request logging (Morgan)  
 
-### Expenses
-- `GET /api/expenses` - Get all expenses (with optional filters)
-- `GET /api/expenses/stats` - Get expense statistics
-- `GET /api/expenses/suggestions` - Get spending suggestions
-- `GET /api/expenses/report/pdf` - Download PDF report
-- `POST /api/expenses` - Create new expense
-- `PUT /api/expenses/:id` - Update expense
-- `DELETE /api/expenses/:id` - Delete expense
+## 📦 Installation
 
-### Health Check
-- `GET /api/health` - Server health status
-
-## Environment Variables
-
-Create a `.env` file with:
-
-```env
-PORT=5000
-MONGODB_URI=your_mongodb_connection_string
-NODE_ENV=development
-```
-
-## Running the Server
-
-### Development Mode
 ```bash
+npm install
+cp .env.example .env
 npm run dev
 ```
 
-### Production Mode
-```bash
-npm start
+## 🔐 Required Environment Variables
+
+```env
+NODE_ENV=production
+MONGODB_URI=mongodb://localhost:27017/expency
+JWT_SECRET=your-super-secret-key-min-32-chars
 ```
 
-## Features
+## 📡 API Endpoints
 
-✅ Clean architecture with separation of concerns  
-✅ Service layer for business logic  
-✅ Error handling middleware  
-✅ Request logging  
-✅ PDF report generation  
-✅ Smart spending suggestions  
-✅ MongoDB with Mongoose ODM  
-✅ RESTful API design  
+**Auth:**
+- POST `/api/auth/signup` - Register
+- POST `/api/auth/login` - Login
+- GET `/api/auth/me` - Get user
 
-## Development Best Practices
+**Expenses (Protected):**
+- GET `/api/expenses` - List expenses
+- POST `/api/expenses` - Create expense
+- PUT `/api/expenses/:id` - Update expense
+- DELETE `/api/expenses/:id` - Delete expense
+- GET `/api/expenses/stats` - Statistics
+- GET `/api/expenses/suggestions` - AI suggestions
+- GET `/api/expenses/report/pdf` - PDF report
 
-1. **Controllers** handle HTTP only - no business logic
-2. **Services** contain all business logic
-3. **Models** define data structure only
-4. **Middleware** for cross-cutting concerns
-5. **Utils** for reusable functions
-6. **Config** for centralized settings
+## 🚀 Production Deployment
+
+```bash
+# Use PM2
+pm2 start src/server.js --name expency-api
+pm2 save
+pm2 startup
+```
+
+## 📊 Response Format
+
+```json
+{
+  "statusCode": 200,
+  "success": true,
+  "message": "Success",
+  "data": {}
+}
+```
+
+## 🛡️ Security
+
+- Rate limiting prevents brute force
+- JWT tokens expire in 30 days
+- Passwords require 6+ chars with numbers
+- All inputs validated and sanitized

@@ -1,15 +1,17 @@
-# Student Expense Tracker - Setup Guide
+# Expency - Personal Expense Tracker
 
-A comprehensive expense tracking application built specifically for Indian college students with features like PDF report generation and smart spending suggestions.
+A comprehensive expense tracking application with user authentication and smart features like PDF report generation and spending suggestions.
 
 ## Features
 
-- 📊 Track expenses with categories relevant to Indian college students
+- 🔐 **User Authentication** - Secure signup and login system
+- 📊 Track expenses with detailed categories
 - 💰 Monthly spending analytics with charts
 - 📄 **Download monthly reports in PDF format**
-- 💡 **Smart spending suggestions** tailored for students
+- 💡 **Smart spending suggestions** tailored for you
 - 📱 Mobile-responsive design
 - 🎨 Beautiful and intuitive UI
+- 👤 **Personal account-based tracking** - Each user has their own expenses
 
 ## Categories
 

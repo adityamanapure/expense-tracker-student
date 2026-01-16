@@ -49,7 +49,7 @@ const ExpenseForm = ({ onExpenseAdded }) => {
         notes: ''
       });
     } catch (error) {
-      alert('Failed to add expense');
+      console.error('Failed to add expense:', error);
     }
   };
 

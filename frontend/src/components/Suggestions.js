@@ -1,7 +1,38 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import './Suggestions.css';
 
 const Suggestions = ({ suggestions, totalExpenses, recommendedBudget }) => {
+  const [customBudget, setCustomBudget] = useState(null);
+  const [isEditingBudget, setIsEditingBudget] = useState(false);
+  const [budgetInput, setBudgetInput] = useState('');
+
+  useEffect(() => {
+    // Load custom budget from localStorage
+    const saved = localStorage.getItem('customMonthlyBudget');
+    if (saved) {
+      setCustomBudget(Number(saved));
+    }
+  }, []);
+
+  const activeBudget = customBudget || recommendedBudget;
+
+  const handleSetBudget = () => {
+    const budget = Number(budgetInput);
+    if (budget > 0) {
+      setCustomBudget(budget);
+      localStorage.setItem('customMonthlyBudget', budget);
+      setIsEditingBudget(false);
+      setBudgetInput('');
+    }
+  };
+
+  const handleResetBudget = () => {
+    setCustomBudget(null);
+    localStorage.removeItem('customMonthlyBudget');
+    setIsEditingBudget(false);
+    setBudgetInput('');
+  };
+
   const getPriorityColor = (priority) => {
     switch(priority) {
       case 'high': return '#e74c3c';
@@ -43,17 +74,69 @@ const Suggestions = ({ suggestions, totalExpenses, recommendedBudget }) => {
         </div>
         <div className="budget-separator">vs</div>
         <div className="budget-stat">
-          <span className="label">Recommended Budget</span>
-          <span className="value recommended">₹{recommendedBudget || 8000}</span>
+          <span className="label">
+            {customBudget ? 'Your Budget' : 'Recommended Budget'}
+            {customBudget && <span className="custom-badge">Custom</span>}
+          </span>
+          <span className="value recommended">₹{activeBudget}</span>
         </div>
       </div>
 
-      {totalExpenses > recommendedBudget && (
+      <div className="budget-controls">
+        {!isEditingBudget ? (
+          <div className="budget-actions">
+            <button 
+              className="btn-set-budget" 
+              onClick={() => {
+                setIsEditingBudget(true);
+                setBudgetInput(customBudget || recommendedBudget);
+              }}
+            >
+              {customBudget ? '✏️ Edit Budget' : '🎯 Set Custom Budget'}
+            </button>
+            {customBudget && (
+              <button className="btn-reset-budget" onClick={handleResetBudget}>
+                🔄 Reset to Default
+              </button>
+            )}
+          </div>
+        ) : (
+          <div className="budget-editor">
+            <input
+              type="number"
+              className="budget-input"
+              value={budgetInput}
+              onChange={(e) => setBudgetInput(e.target.value)}
+              placeholder="Enter monthly budget"
+              min="1000"
+              step="100"
+            />
+            <button className="btn-save-budget" onClick={handleSetBudget}>
+              ✓ Save
+            </button>
+            <button className="btn-cancel-budget" onClick={() => setIsEditingBudget(false)}>
+              ✕ Cancel
+            </button>
+          </div>
+        )}
+      </div>
+
+      {totalExpenses > activeBudget && (
         <div className="alert-box">
           <span className="alert-icon">⚠️</span>
           <div className="alert-content">
             <strong>Budget Exceeded!</strong>
-            <p>You've spent ₹{(totalExpenses - recommendedBudget).toFixed(2)} more than recommended. Check the suggestions below to save money.</p>
+            <p>You've spent ₹{(totalExpenses - activeBudget).toFixed(2)} more than your budget. Check the suggestions below to save money.</p>
+          </div>
+        </div>
+      )}
+
+      {totalExpenses <= activeBudget && totalExpenses > 0 && (
+        <div className="success-box">
+          <span className="success-icon">✓</span>
+          <div className="success-content">
+            <strong>Great Job!</strong>
+            <p>You're within your budget! You have ₹{(activeBudget - totalExpenses).toFixed(2)} remaining this month.</p>
           </div>
         </div>
       )}

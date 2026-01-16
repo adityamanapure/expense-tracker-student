@@ -45,6 +45,17 @@
 .budget-stat .label {
   font-size: 14px;
   opacity: 0.9;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.custom-badge {
+  background: rgba(255, 255, 255, 0.3);
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 600;
 }
 
 .budget-stat .value {
@@ -56,6 +67,102 @@
   font-size: 20px;
   font-weight: 600;
   opacity: 0.8;
+}
+
+.budget-controls {
+  margin-bottom: 25px;
+}
+
+.budget-actions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.btn-set-budget,
+.btn-reset-budget {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-set-budget {
+  background: #667eea;
+  color: white;
+}
+
+.btn-set-budget:hover {
+  background: #5568d3;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.btn-reset-budget {
+  background: #e9ecef;
+  color: #495057;
+}
+
+.btn-reset-budget:hover {
+  background: #dee2e6;
+}
+
+.budget-editor {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding: 15px;
+  background: #f8f9fa;
+  border-radius: 8px;
+}
+
+.budget-input {
+  padding: 10px 15px;
+  border: 2px solid #ced4da;
+  border-radius: 6px;
+  font-size: 16px;
+  width: 200px;
+  font-family: inherit;
+}
+
+.budget-input:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.btn-save-budget,
+.btn-cancel-budget {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-save-budget {
+  background: #667eea;
+  color: white;
+}
+
+.btn-save-budget:hover {
+  background: #5568d3;
+}
+
+.btn-cancel-budget {
+  background: #e9ecef;
+  color: #495057;
+}
+
+.btn-cancel-budget:hover {
+  background: #dee2e6;
 }
 
 .alert-box {
@@ -85,6 +192,45 @@
 .alert-content p {
   margin: 0;
   color: #856404;
+  font-size: 14px;
+}
+
+.success-box {
+  display: flex;
+  gap: 15px;
+  padding: 15px;
+  background: #d4edda;
+  border: 1px solid #28a745;
+  border-radius: 8px;
+  margin-bottom: 25px;
+}
+
+.success-icon {
+  font-size: 24px;
+  color: #28a745;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  background: white;
+  border-radius: 50%;
+}
+
+.success-content {
+  flex: 1;
+}
+
+.success-content strong {
+  display: block;
+  color: #155724;
+  margin-bottom: 5px;
+}
+
+.success-content p {
+  margin: 0;
+  color: #155724;
   font-size: 14px;
 }
 

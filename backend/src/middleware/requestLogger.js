@@ -1,7 +1,18 @@
-const requestLogger = (req, res, next) => {
-  const timestamp = new Date().toISOString();
-  console.log(`[${timestamp}] ${req.method} ${req.path}`);
-  next();
+// src/middleware/requestLogger.js
+const morgan = require('morgan');
+const config = require('../config/env');
+
+/**
+ * Request logging middleware
+ */
+const requestLogger = () => {
+  if (config.nodeEnv === 'development') {
+    // Detailed logging in development
+    return morgan('dev');
+  } else {
+    // Combined format in production
+    return morgan('combined');
+  }
 };
 
 module.exports = requestLogger;

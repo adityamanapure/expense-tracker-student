@@ -1,10 +1,11 @@
 const Expense = require('../models/Expense');
+const mongoose = require('mongoose');
 
 class ExpenseService {
   // Get expenses with filters
   async getExpenses(filters = {}) {
-    const { month, year, category } = filters;
-    let query = {};
+    const { month, year, category, userId } = filters;
+    let query = { user: userId };
 
     if (month && year) {
       const startDate = new Date(year, month - 1, 1);
@@ -20,8 +21,8 @@ class ExpenseService {
   }
 
   // Get statistics
-  async getStatistics(month, year) {
-    let matchQuery = {};
+  async getStatistics(month, year, userId) {
+    let matchQuery = { user: new mongoose.Types.ObjectId(userId) };
 
     if (month && year) {
       const startDate = new Date(year, month - 1, 1);
@@ -60,8 +61,8 @@ class ExpenseService {
   }
 
   // Update expense
-  async updateExpense(id, expenseData) {
-    const expense = await Expense.findById(id);
+  async updateExpense(id, expenseData, userId) {
+    const expense = await Expense.findOne({ _id: id, user: userId });
     if (!expense) {
       throw new Error('Expense not found');
     }
@@ -71,8 +72,8 @@ class ExpenseService {
   }
 
   // Delete expense
-  async deleteExpense(id) {
-    const expense = await Expense.findById(id);
+  async deleteExpense(id, userId) {
+    const expense = await Expense.findOne({ _id: id, user: userId });
     if (!expense) {
       throw new Error('Expense not found');
     }
