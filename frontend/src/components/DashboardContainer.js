@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { expenseService } from '../services/expenseService';
 import ExpenseForm from './ExpenseForm';
 import ExpenseList from './ExpenseList';
@@ -15,11 +15,7 @@ const DashboardContainer = () => {
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
   const [activeTab, setActiveTab] = useState('dashboard'); // dashboard, expenses, suggestions
 
-  useEffect(() => {
-    fetchData();
-  }, [selectedMonth, selectedYear]);
-
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     try {
       setLoading(true);
       const [expensesData, statsData] = await Promise.all([
@@ -30,31 +26,30 @@ const DashboardContainer = () => {
       setExpenses(expensesData);
       setStats(statsData);
     } catch (error) {
-      console.error('Error fetching data:', error);
+      // Error handling - could be logged to error tracking service
     } finally {
       setLoading(false);
     }
-  };
+  }, [selectedMonth, selectedYear]);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
 
   const fetchSuggestions = async () => {
     try {
       const data = await expenseService.getSuggestions(selectedMonth, selectedYear);
       setSuggestions(data);
     } catch (error) {
-      console.error('Error fetching suggestions:', error);
+      // Error handling - could be logged to error tracking service
     }
   };
 
   const handleAddExpense = async (expenseData) => {
     try {
-      console.log('Submitting expense data:', expenseData);
-      const result = await expenseService.createExpense(expenseData);
-      console.log('Expense created:', result);
+      await expenseService.createExpense(expenseData);
       await fetchData();
     } catch (error) {
-      console.error('Error adding expense:', error);
-      console.error('Error response:', error.response);
-      console.error('Error data:', error.response?.data);
       throw error;
     }
   };
@@ -64,7 +59,7 @@ const DashboardContainer = () => {
       await expenseService.updateExpense(id, expenseData);
       await fetchData();
     } catch (error) {
-      console.error('Error updating expense:', error);
+      // Error handling - could be logged to error tracking service
     }
   };
 
@@ -73,7 +68,7 @@ const DashboardContainer = () => {
       await expenseService.deleteExpense(id);
       await fetchData();
     } catch (error) {
-      console.error('Error deleting expense:', error);
+      // Error handling - could be logged to error tracking service
     }
   };
 
@@ -81,7 +76,7 @@ const DashboardContainer = () => {
     try {
       await expenseService.downloadPDF(selectedMonth, selectedYear);
     } catch (error) {
-      console.error('Error downloading PDF:', error);
+      // Error handling - could be logged to error tracking service
     }
   };
 

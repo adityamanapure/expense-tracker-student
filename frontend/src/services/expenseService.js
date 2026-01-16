@@ -6,19 +6,15 @@ const API_URL = 'http://localhost:5000/api/expenses';
 const getAuthHeader = () => {
   const userStr = localStorage.getItem('user');
   if (!userStr) {
-    console.error('No user found in localStorage');
     return {};
   }
   
   const user = JSON.parse(userStr);
-  console.log('User from localStorage:', user);
   
   if (!user?.token) {
-    console.error('No token found in user object');
     return {};
   }
   
-  console.log('Sending auth header with token');
   return { Authorization: `Bearer ${user.token}` };
 };
 

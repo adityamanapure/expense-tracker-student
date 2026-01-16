@@ -49,7 +49,7 @@ const ExpenseForm = ({ onExpenseAdded }) => {
         notes: ''
       });
     } catch (error) {
-      console.error('Failed to add expense:', error);
+      // Error handling - could be logged to error tracking service
     }
   };
 
